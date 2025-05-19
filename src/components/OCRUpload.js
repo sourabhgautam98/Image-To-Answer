@@ -35,7 +35,7 @@ export default function OCRUpload() {
       method: "POST",
       url: "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions",
       headers: {
-        "x-rapidapi-key": "24fb306253mshf7a6c4356ada724p19e42fjsn8e439798ae23",
+        "x-rapidapi-key": "73a2c1a1a5mshd4bf04c2e6d6820p16d9b2jsn0edcf5c4ffdb",
         "x-rapidapi-host":
           "cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com",
         "Content-Type": "application/json",
