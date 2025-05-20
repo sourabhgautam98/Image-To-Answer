@@ -13,18 +13,26 @@ export default function CameraToChatbot() {
   const [text, setText] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cameraFacingMode, setCameraFacingMode] = useState("environment"); // "user" or "environment"
 
   useEffect(() => {
-    startCamera();
+    startCamera(cameraFacingMode);
     return () => stopCamera();
-  }, []);
+  }, [cameraFacingMode]);
 
-  const startCamera = async () => {
+  const startCamera = async (facingMode = "environment") => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      videoRef.current.srcObject = stream;
-      setStream(stream);
-      videoRef.current.play();
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode },
+        audio: false,
+      });
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        videoRef.current.play();
+      }
+
+      setStream(mediaStream);
     } catch (err) {
       console.error("Error accessing webcam:", err);
     }
@@ -32,8 +40,12 @@ export default function CameraToChatbot() {
 
   const stopCamera = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
     }
+  };
+
+  const toggleCamera = () => {
+    setCameraFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
   };
 
   const takePhoto = () => {
@@ -100,7 +112,7 @@ export default function CameraToChatbot() {
     setPhoto(null);
     setText("");
     setResponse("");
-    startCamera();
+    startCamera(cameraFacingMode);
   };
 
   return (
@@ -110,6 +122,14 @@ export default function CameraToChatbot() {
       {!photo ? (
         <>
           <video ref={videoRef} className="rounded-md w-full max-w-md" autoPlay playsInline />
+          
+          <button
+            onClick={toggleCamera}
+            className="mt-2 px-4 py-1 bg-yellow-500 hover:bg-yellow-600 rounded-lg text-sm font-semibold"
+          >
+            Switch Camera
+          </button>
+
           <button
             onClick={takePhoto}
             className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold"
